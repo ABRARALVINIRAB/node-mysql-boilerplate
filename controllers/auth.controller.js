@@ -202,7 +202,7 @@ const sendTokenResponse = (user, statusCode, message, res) => {
   const token = user.getSignedJwtToken();
   const options = {
     expires: new Date(
-      Date.now() + config.COOKIE_EXPIRES * 24 * 60 * 60 * 1000 // 1 day = 24 * 60 * 60 * 1000 ms
+      Date.now() + config.COOKIE_EXPIRkS * 24 * 60 * 60 * 1000 // 1 day = 24 * 60 * 60 * 1000 ms
     ),
     secure: config.SSL && config.NODE_ENV === env_mode.PRODUCTION
   };
