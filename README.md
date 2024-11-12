@@ -26,7 +26,7 @@ cp .env.example .env.development
 ```
 ## Features
 
-- **SQL database**: [MySQL](https://www.MySQL.org/) sql query builder using [sequelize](https://sequelize.org/)
+- **SQL database**: Sql query builder using [sequelize](https://sequelize.org/)
 - **Authentication**: using [jsonwebtoken](https://jwt.io)
 - **Validation**: request data validation using [Joi](https://github.com/hapijs/joi)
 - **Logging**: using [morgan](https://github.com/expressjs/morgan)
