@@ -18,7 +18,7 @@ exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, username, password, role, phone_no } = reqBody;
 
   // Check for user
-  const user = await User.findOne({ where: { username }, attributes: { include: 'password' } });
+  let user = await User.findOne({ where: { username }, attributes: { include: 'password' } });
   if (user) {
     return next(new ErrorResponse('Username exists', 401));
   }
@@ -196,17 +196,43 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 
 
 // Get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, message, res) => {
+// const sendTokenResponse = (user, statusCode, message, res) => {
 
+//   // Create token
+//   const token = user.getSignedJwtToken();
+//   const options = {
+//     expires: new Date(
+//       Date.now() + config.COOKIE_EXPIRkS * 24 * 60 * 60 * 1000 // 1 day = 24 * 60 * 60 * 1000 ms
+//     ),
+//     secure: config.SSL && config.NODE_ENV === env_mode.PRODUCTION
+//   };
+
+//   res
+//     .status(statusCode)
+//     .cookie('token', token, options)
+//     .cookie('accessToken', token, { ...options, httpOnly: true })
+//     .json({
+//       success: true,
+//       message,
+//       data: {
+//         user,
+//         token
+//       }
+//     });
+// };
+
+const sendTokenResponse = (user, statusCode, message, res) => {
   // Create token
   const token = user.getSignedJwtToken();
+
+  // Calculate cookie expiration
   const options = {
-    expires: new Date(
-      Date.now() + config.COOKIE_EXPIRkS * 24 * 60 * 60 * 1000 // 1 day = 24 * 60 * 60 * 1000 ms
-    ),
-    secure: config.SSL && config.NODE_ENV === env_mode.PRODUCTION
+    expires: new Date(Date.now() + config.COOKIE_EXPIRES * 24 * 60 * 60 * 1000), // Days to milliseconds
+    secure: config.SSL && config.NODE_ENV === env_mode.PRODUCTION,
+    httpOnly: true, // Ensure secure handling in browsers
   };
 
+  // Set cookies and send response
   res
     .status(statusCode)
     .cookie('token', token, options)
@@ -216,7 +242,7 @@ const sendTokenResponse = (user, statusCode, message, res) => {
       message,
       data: {
         user,
-        token
-      }
+        token,
+      },
     });
 };

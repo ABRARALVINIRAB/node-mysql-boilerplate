@@ -3,16 +3,17 @@ const path = require('path');
 const Joi = require('joi');
 const { env_mode } = require('../enums/common.enum');
 
-dotenv.config({ path: path.join(__dirname, '../.env.development') });
+dotenv.config({ path: path.join(__dirname, '../.env') });
 
 const configEnvSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid(env_mode.PRODUCTION, env_mode.DEVELOPMENT).required(),
-    PORT: Joi.number().default(3900).required(),
+    PORT: Joi.number().default(5000).required(),
 
     DB_HOST: Joi.string().description('Database host'),
     DB_USERNAME: Joi.string().description('Database username'),
-    DB_PASSWORD: Joi.string().description('Database password'),
+    // DB_PASSWORD: Joi.string().description('Database password'),
+    DB_PASSWORD: Joi.string().allow('').description('Database password'),
     DB_NAME: Joi.string().required().description('Database name'),
 
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
